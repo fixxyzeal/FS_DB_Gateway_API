@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BO\BO.csproj" />
+    <ProjectReference Include="..\DAL_Layer\DAL.csproj" />
+    <ProjectReference Include="..\FS_DB_GatewayAPI\FS_DB_GatewayAPI.csproj" />
+    <ProjectReference Include="..\ServiceLB\ServiceLB.csproj" />
+  </ItemGroup>
+</Project>
