@@ -33,8 +33,12 @@ namespace FS_DB_GatewayAPI.Controllers
            [FromBody] LogViewModel log
            )
         {
-            //Set Ip
-            log.IP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            //Set IP
+            if (string.IsNullOrEmpty(log.IP))
+            {
+                log.IP = Helpers.Helper.GetIP(this.HttpContext);
+            }
+
             await _logService.AddInformationLog(log).ConfigureAwait(false);
             return Ok();
         }
@@ -44,8 +48,12 @@ namespace FS_DB_GatewayAPI.Controllers
          [FromBody] LogViewModel log
          )
         {
-            //Set Ip
-            log.IP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            //Set IP
+            if (string.IsNullOrEmpty(log.IP))
+            {
+                log.IP = Helpers.Helper.GetIP(this.HttpContext);
+            }
+
             await _logService.AddErrorLog(log).ConfigureAwait(false);
             return Ok();
         }

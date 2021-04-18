@@ -1,7 +1,11 @@
+using AutoMapper;
+using BO.AutoMapperProFile;
 using BO.StaticModels;
 using BO.ViewModels;
+using DAL;
 using FS_DB_GatewayAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ServiceLB.LogService;
@@ -9,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace UnitTest
@@ -70,6 +75,14 @@ namespace UnitTest
         public async Task TestAddInformationLog()
         {
             //Arrange
+            //IServiceCollection services = new ServiceCollection();
+
+            //services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProFile)));
+
+            //IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            //ILogService logService = new LogService(serviceProvider.GetService<IMongoUnitOfWork>(), serviceProvider.GetService<IMapper>());
+
             var MockLogService = new Mock<ILogService>();
 
             BO.ViewModels.LogViewModel logData = new BO.ViewModels.LogViewModel
@@ -163,7 +176,7 @@ namespace UnitTest
         private IList<ValidationResult> ValidateModel(object model)
         {
             var validationResults = new List<ValidationResult>();
-            var ctx = new ValidationContext(model, null, null);
+            var ctx = new System.ComponentModel.DataAnnotations.ValidationContext(model, null, null);
             Validator.TryValidateObject(model, ctx, validationResults, true);
             return validationResults;
         }
