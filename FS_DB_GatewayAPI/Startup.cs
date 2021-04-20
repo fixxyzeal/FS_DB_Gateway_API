@@ -76,7 +76,7 @@ namespace FS_DB_GatewayAPI
                    ValidateIssuerSigningKey = true,
                    ValidIssuer = "FS",
                    ValidAudience = "FS Studio",
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("Secret")))
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET")))
                };
            });
 
