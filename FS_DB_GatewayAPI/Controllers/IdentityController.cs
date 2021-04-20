@@ -1,4 +1,5 @@
 ﻿using BO.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ServiceLB.IdentityService;
@@ -21,6 +22,7 @@ namespace FS_DB_GatewayAPI.Controllers
             _identityService = identityService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(
            [FromBody] AuthRequestModel auth
