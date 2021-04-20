@@ -4,6 +4,7 @@ using BO.Models.Mongo;
 using BO.ViewModels;
 using DAL;
 using FS_DB_GatewayAPI.Filters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -13,12 +14,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ServiceLB.IdentityService;
 using ServiceLB.LogService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FS_DB_GatewayAPI
@@ -47,6 +51,7 @@ namespace FS_DB_GatewayAPI
             //Add DI
             services.AddScoped<MessageResult>();
             services.AddScoped<ILogService, ServiceLB.LogService.LogService>();
+            services.AddScoped<IIdentityService, IdentityService>();
             //Add Cors
             services.AddCors(options =>
             {
@@ -59,15 +64,69 @@ namespace FS_DB_GatewayAPI
             });
             //Add Health Check
             services.AddHealthChecks();
+            //Add JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(options =>
+           {
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ValidateIssuerSigningKey = true,
+                   ValidIssuer = "FS",
+                   ValidAudience = "FS Studio",
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("Secret")))
+               };
+           });
 
             services.AddControllers(opt =>
             {
                 // Add ExceptionFilter
                 opt.Filters.Add(typeof(ExceptionFilter));
             });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FS_DB_GatewayAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "FS_DB_GatewayAPI",
+                    Version = "v1",
+                    Description = "FS_DB_GatewayAPI " + services.GetType().Assembly.GetName().Version.ToString(),
+
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Chanchai Jeimvijack",
+                        Email = "kewell5@live.com",
+                    },
+                });
+
+                // Add Jwt
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                        {
+                              new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "Bearer"
+                                    }
+                                },
+                                new string[] {}
+                        }
+                });
             });
         }
 
@@ -87,6 +146,8 @@ namespace FS_DB_GatewayAPI
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

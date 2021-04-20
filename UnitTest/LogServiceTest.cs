@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace UnitTest
 {
     [TestClass]
-    public class LogServiceUnitTest
+    public class LogServiceTest
     {
         private LogServiceController _logServiceController;
 
@@ -75,13 +75,6 @@ namespace UnitTest
         public async Task TestAddInformationLog()
         {
             //Arrange
-            //IServiceCollection services = new ServiceCollection();
-
-            //services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProFile)));
-
-            //IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            //ILogService logService = new LogService(serviceProvider.GetService<IMongoUnitOfWork>(), serviceProvider.GetService<IMapper>());
 
             var MockLogService = new Mock<ILogService>();
 

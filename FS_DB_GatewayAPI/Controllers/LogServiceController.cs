@@ -1,4 +1,5 @@
 ﻿using BO.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ServiceLB.LogService;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 namespace FS_DB_GatewayAPI.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Admin")]
     [Route("api/v1/[controller]")]
     public class LogServiceController : ControllerBase
     {
