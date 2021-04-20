@@ -49,9 +49,9 @@ namespace FS_DB_GatewayAPI
             services.AddSingleton<IDatabaseSettings>(mongoSetting);
             services.AddSingleton<IMongoUnitOfWork, MongoUnitOfWork>();
             //Add DI
-            services.AddTransient<MessageResult>();
-            services.AddTransient<ILogService, ServiceLB.LogService.LogService>();
-            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddScoped<MessageResult>();
+            services.AddScoped<ILogService, ServiceLB.LogService.LogService>();
+            services.AddScoped<IIdentityService, IdentityService>();
             //Add Cors
             services.AddCors(options =>
             {
